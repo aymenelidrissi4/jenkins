@@ -1,0 +1,12 @@
+services:
+  jenkins:
+    container_name: jenkins
+    build:
+      context: ./context
+    volumes:
+      - jenkins-data:/var/opt/jenkins
+    ports:
+      - "8080:8081"
+volumes:
+  jenkins-data:
+    name: jenkins-data-volume
