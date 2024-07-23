@@ -2,11 +2,42 @@ services:
   jenkins:
     container_name: jenkins
     build:
-      context: ./context
+      context: ./jenkins
     volumes:
       - jenkins-data:/var/opt/jenkins
     ports:
-      - "8080:8081"
+      - "8081:8081"
+  sonar:
+    container_name: sonar
+    build:
+      context: ./sonar
+    volumes:
+      - sonar-data:/var/opt/sonar
+    ports:
+      - "9000:9000"
+    environment:
+      - SONARQUBE_JDBC_USERNAME=user
+      - SONARQUBE_JDBC_PASSWORD=password
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://database:5432/sonarqube
+      - SONAR_WEB_HOST=0.0.0.0
+      - SONAR_WEB_PORT=9000
+  mssql:
+    container_name: sql-server
+    image: mcr.microsoft.com/mssql/server
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "password"
+      MSSQL_USER: "user"
+      MSSQL_PASSWORD: "password"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
 volumes:
   jenkins-data:
     name: jenkins-data-volume
+  sonar-data:
+    name: sonar-data-volume
+  mssql-data:
+    name: mssql-data-volume
